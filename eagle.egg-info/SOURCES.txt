@@ -1,0 +1,9 @@
+README.md
+setup.py
+eagle/__init__.py
+eagle/eagle.py
+eagle.egg-info/PKG-INFO
+eagle.egg-info/SOURCES.txt
+eagle.egg-info/dependency_links.txt
+eagle.egg-info/entry_points.txt
+eagle.egg-info/top_level.txt

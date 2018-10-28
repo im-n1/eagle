@@ -1,0 +1,12 @@
+Metadata-Version: 1.2
+Name: eagle
+Version: 0.1
+Summary: Simple TODO tool for CLI.
+Home-page: UNKNOWN
+Author: n1
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Environment :: Console
+Classifier: Programming Language :: Python :: 3.6
+Requires-Python: >=3.6
