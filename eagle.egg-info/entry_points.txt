@@ -1,3 +1,0 @@
-[console_scripts]
-eagle = eagle.eagle:eagle
-
