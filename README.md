@@ -1,6 +1,6 @@
 # Eagle
 
-[logo](logo.png)
+![logo](logo.png)
 
 Eagle is a simple CLI todo tool. It's so simple it hurts my coding skills.
 
