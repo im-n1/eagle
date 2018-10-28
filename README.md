@@ -1,11 +1,9 @@
 # Eagle
-
 ![logo](logo.png)
 
 Eagle is a simple CLI todo tool. It's so simple it hurts my coding skills.
 
-## How does it works?
-
+## How does it work?
 ```
 ~ eagle
 
@@ -19,8 +17,23 @@ Your list:
   3. buy presents (on 24th December) [bro]
 ```
 
-## Parameters
+## How can I install it?
+Don't worry about the early version number 0.x. I tent to Semantic Verioning more
+than to "Marketing Versioning". That means version 0.5 is a quite soling piece of
+software instead or having version 25 and still not-even-half-way there.
 
+So:
+
+```
+pip install eagle
+```
+
+You might need to use `pip3` instead if you run Python 2 next to Python 3.
+
+## Requirements
+* Python 3.6+
+
+## Parameters
 **`-a, --add`**
 
 Example:
@@ -85,3 +98,11 @@ or modernize each year (see web apps).
 
 Also you can easily parse the output and chain that into your window manager widget if you
 want to (i.e. AwesomeWM).
+
+## Why GitLab?
+It's hard to explain. It's one of those "once you switch you don't look back" things.
+Try it yourself.
+
+## Can I contribute?
+Absolutely! I would be more than happy to accept any bug-report, improvement, pull request,
+constructive criticism, etc.
