@@ -25,7 +25,7 @@ Your list:
 
 Example:
 
-```
+```shell
 ~ eagle -a "make yo bed" 1day  # Adds todo for each day
 ~ eagle -a "make yo sis bed" @20/1/2050  # Adds todo on 20th January 2050
 ~ eagle -a "make yo dog bed" - # Adds todo without specific deadline or recurring
