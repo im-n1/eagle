@@ -4,7 +4,7 @@ import setuptools
 
 
 setuptools.setup(
-    name="eagle",
+    name="eagle-todo",
     version=0.1,
     description="Simple TODO tool for CLI.",
     author="n1",
@@ -16,5 +16,9 @@ setuptools.setup(
     classifiers=[
         "Environment :: Console",
         "Programming Language :: Python :: 3.6",
+        "Intended Audience :: End Users/Desktop",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Office/Business :: Scheduling ",
     ]
 )

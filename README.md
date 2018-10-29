@@ -25,7 +25,7 @@ software instead or having version 25 and still not-even-half-way there.
 So:
 
 ```
-pip install eagle
+pip install eagle-todo
 ```
 
 You might need to use `pip3` instead if you run Python 2 next to Python 3.
