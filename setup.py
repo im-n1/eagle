@@ -2,12 +2,17 @@
 
 import setuptools
 
+with open("description.rst", "r") as f:
+    description = f.read()
 
 setuptools.setup(
-    name="eagle-todo",
-    version=0.1,
+    name="eagle-cli",
+    version="0.1",
+    # version="0.1-4",
     description="Simple TODO tool for CLI.",
+    long_description=description,
     author="n1",
+    url="https://gitlab.com/n1_/eagle",
     packages=setuptools.find_packages(),
     entry_points={
         "console_scripts": ["eagle = eagle.eagle:eagle"]

@@ -1,5 +1,5 @@
 # Eagle
-![logo](logo.png)
+![logo](https://gitlab.com/n1_/eagle/raw/master/logo.png)
 
 Eagle is a simple CLI todo tool. It's so simple it hurts my coding skills.
 
@@ -25,7 +25,7 @@ software instead or having version 25 and still not-even-half-way there.
 So:
 
 ```
-pip install eagle-todo
+pip install eagle-cli
 ```
 
 You might need to use `pip3` instead if you run Python 2 next to Python 3.
