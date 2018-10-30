@@ -7,8 +7,8 @@ with open("description.rst", "r") as f:
 
 setuptools.setup(
     name="eagle-cli",
-    version="0.1",
-    # version="0.1-4",
+    # version="0.1.1",
+    version="0.1.1",
     description="Simple TODO tool for CLI.",
     long_description=description,
     author="n1",

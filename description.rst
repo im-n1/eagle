@@ -19,7 +19,7 @@ How does it work?
 
       1. do the laundry (every week)
       2. buy some food (each other day)
-      3. buy presents (on 24th December) [bro]
+      3. buy presents (on 24th December)
 
 How can I install it?
 ---------------------
@@ -55,7 +55,7 @@ Example:
 * frequency
     * no frequency/recurring - `-`
     * recurring - `1d`, `1w`, `1m`, `1y`
-    * on a specific date - `@20/1` nebo `@20/1/2050`
+    * on a specific date - `@20/1` or `@20/1/2050`
 * whom `bro`
 
 **-d, --del**
