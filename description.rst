@@ -23,8 +23,8 @@ How does it work?
 
 How can I install it?
 ---------------------
-Don't worry about the early version number 0.x. I tent to Semantic Verioning more
-than to "Marketing Versioning". That means version 0.5 is a quite soling piece of
+Don't worry about the early version number 0.x. I tend to Semantic Verioning more
+than to "Marketing Versioning". That means version 0.5 is quite solid piece of
 software instead or having version 25 and still not-even-half-way there.
 
 So:
