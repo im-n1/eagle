@@ -97,22 +97,3 @@ Example:
 
    ~ eagle -c
    Todo list has been cleared out.
-
-Why CLI?
---------
-CLI is the best UI ever invented. It's fast, clean, bloat free and you dont have to
-invest massive effort to make your software looks good. Also you don't have to rewrite
-or modernize each year (see web apps).
-
-Also you can easily parse the output and chain that into your window manager widget if you
-want to (i.e. AwesomeWM).
-
-Why GitLab?
------------
-It's hard to explain. It's one of those "once you switch you don't look back" things.
-Try it yourself.
-
-Can I contribute?
------------------
-Absolutely! I would be more than happy to accept any bug-report, improvement, pull request,
-constructive criticism, etc.

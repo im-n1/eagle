@@ -103,6 +103,11 @@ want to (i.e. AwesomeWM).
 It's hard to explain. It's one of those "once you switch you don't look back" things.
 Try it yourself.
 
+## Isn't this just another copycat?
+There is a few project around which are pretty good. For example [TaskWarrior](https://taskwarrior.org/)
+which robust and cover pretty much everything. For me it's too heavy and fancy with all
+the charts and tables. I wanted something more quiet and more straightforward.
+
 ## Can I contribute?
 Absolutely! I would be more than happy to accept any bug-report, improvement, pull request,
 constructive criticism, etc.
