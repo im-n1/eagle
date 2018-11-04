@@ -105,8 +105,8 @@ Try it yourself.
 
 ## Isn't this just another copycat?
 There is a few project around which are pretty good. For example [TaskWarrior](https://taskwarrior.org/)
-which robust and cover pretty much everything. For me it's too heavy and fancy with all
-the charts and tables. I wanted something more quiet and more straightforward.
+which is robust and covers pretty much everything. For me it's too heavy and fancy with all
+the charts and tables. I want something more quiet and more straightforward.
 
 ## Can I contribute?
 Absolutely! I would be more than happy to accept any bug-report, improvement, pull request,
