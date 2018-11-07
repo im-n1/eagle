@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 
 import setuptools
+from eagle import __version__, __description__
 
+
+# Long description
 with open("description.rst", "r") as f:
-    description = f.read()
+    long_description = f.read()
 
 setuptools.setup(
     name="eagle-cli",
     # version="0.1.1",
-    version="0.1.1",
-    description="Simple TODO tool for CLI.",
-    long_description=description,
+    version=__version__,
+    description=__description__,
+    long_description=long_description,
     author="n1",
     url="https://gitlab.com/n1_/eagle",
     packages=setuptools.find_packages(),

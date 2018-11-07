@@ -41,15 +41,14 @@ Example:
 ```shell
 ~ eagle -a "make yo bed" 1day  # Adds todo for each day
 ~ eagle -a "make yo sis bed" @20/1/2050  # Adds todo on 20th January 2050
-~ eagle -a "make yo dog bed" - # Adds todo without specific deadline or recurring
+~ eagle -a "make yo dog bed" # Adds todo without specific deadline or recurring
 ```
 
 - subject `whatever`
-- frequency
+- frequency (optional)
     no frequency/recurring - `-`
     recurring - `1d`, `1w`, `1m`, `1y`
     on a specific date - `@20/1` or `@20/1/2050`
-- whom `bro`
 
 **`-d, --del`**
 

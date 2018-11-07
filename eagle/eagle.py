@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# from .structs import Task
+from . import __package_name__, __version__, __description__
 
 import pickle
 import argparse
@@ -92,30 +92,30 @@ def parse_arguments():
     :rtype: Namespace
     """
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog=__package_name__, description=__description__)
 
     # -a, --add
     h = (
-        "Add task like: -a \"make yo bed\" 1d or -a \"make yo sis bed\" @20/1/2050. "
-        "You can also add tasks with a dash instead of a specific date like : -a \"get a life\" -. "
+        "Add task like: -a \"do the right thing\" or -a \"make yo bed\" 1d or -a \"make yo sis bed\" @20/1/2050. "
         "For recurring tasks you can use \"d\", \"w\", \"m\", \"y\" for days, weeks, months, years."
     )
-    parser.add_argument("-a", "--add", nargs=2, help=h)
+    parser.add_argument("-a", "--add", nargs="+", action="append", help=h)
 
     # -d, --delete
     h = "Removes an item from todo list. Cannot be undone."
-    parser.add_argument("-d", "--delete", nargs=1, help=h)
+    parser.add_argument("-d", "--delete", nargs=1, type=int, action="append", help=h)
 
     # -c, --clear
-    h = "Clears todo list - removes all the tasks. Cannot be undone."
+    h = "Clears todo list - removes all the tasks. No undo."
     parser.add_argument("-c", "--clear", action="store_true", help=h)
 
-    ns = parser.parse_args()
+    # --version
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")  # NOQA
 
-    return ns
+    return parser.parse_args()
 
 
-def add_task(title, frequency):
+def add_task(tasks):
     """
     Adds task to the list.
 
@@ -132,9 +132,6 @@ def add_task(title, frequency):
 
     def parse_frequency(f):
 
-        if "-" == f:
-            return None
-
         if f.startswith("@"):
             return datetime.strptime(f[1:], "%d/%m/%Y")
 
@@ -142,22 +139,29 @@ def add_task(title, frequency):
 
     # Append new task to the todo list.
     with get_storage() as s:
-        s.append(Task(title, parse_frequency(frequency), datetime.now()))
+        for t in tasks:
+            # If a frequency was given "t" variable has 2 items.
+            s.append(Task(t[0], parse_frequency(t[1]) if 2 == len(t) else None, datetime.now()))
 
 
-def delete_task(index):
+def delete_task(index_list):
     """
     Deletes a task from storage by index.
 
     :param int index: Index of task to be deleted.
     """
 
+    # Sort the IDs descending so while we pop item by item
+    # the task indexes remains the same.
+    to_delete = sorted([i[0] for i in index_list], reverse=True)
+
     with get_storage() as s:
 
-        try:
-            s.pop(int(index) - 1)
-        except IndexError:
-            pass
+        for i in to_delete:
+            try:
+                s.pop(int(i) - 1)
+            except IndexError:
+                print(f"Cannot delete {i}")
 
 
 def get_printable_freq(freq):
@@ -227,9 +231,9 @@ def print_list():
 
             freq = get_printable_freq(t.frequency)
 
-            print(f"\t{i + 1}. {t.title} ({freq})")
+            print(f"\t{i + 1}. {t.title} ({freq})")  # NOQA
 
-        print("")
+        # print("")
 
     def print_other_tasks(tasks):
         """
@@ -249,7 +253,7 @@ def print_list():
             else:
                 print(f"\t{i + 1}. {t.title}")
 
-        print("\n")
+        print("")
 
     with get_storage() as s:
 
@@ -278,12 +282,12 @@ def eagle():
 
         # Add.
         if args.add:
-            add_task(*args.add)
+            add_task(args.add)
             print_list()
 
         # Delete.
         if args.delete:
-            delete_task(*args.delete)
+            delete_task(args.delete)
             print_list()
 
         # Clear.
