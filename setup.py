@@ -5,7 +5,7 @@ from eagle import __version__, __description__
 
 
 # Long description
-with open("description.rst", "r") as f:
+with open("README.rst", "r") as f:
     long_description = f.read()
 
 setuptools.setup(

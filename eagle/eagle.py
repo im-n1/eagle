@@ -1,76 +1,13 @@
 #!/usr/bin/env python3
 
 from . import __package_name__, __version__, __description__
+from .tasks import add_task, delete_task
+from .groups import add_group, delete_group, soft_delete_group
+from .storage import get_storage
 
-import pickle
 import argparse
 from datetime import datetime, date
-from collections import namedtuple
-from contextlib import contextmanager
-import os
 import sys
-
-
-Task = namedtuple("Task", "title frequency created")
-
-
-def get_conf_file(file):
-    """
-    Returns path to file placed in user's config
-    directory.
-    Also checkes if the config directory exists and if not
-    creates it.
-
-    :param str file: File name.
-    :return: Absolute path to the file.
-    :rtype: str
-    """
-
-    conf_path = os.path.join(os.path.expanduser("~"), ".config", "eagle")
-
-    if not os.path.exists(conf_path):
-        os.makedirs(conf_path, mode=0o755)
-
-    return os.path.join(conf_path, file)
-
-
-@contextmanager
-def get_storage():
-    """
-    Context manager for storage.
-    On enter reads storage content and yields it out.
-    On exit serializes and saved storage back to storage file.
-
-    Storage file: storage.dat
-    """
-
-    filename = get_conf_file("storage.dat")
-    f = None
-
-    # Try to open existing file and pickle the
-    # content.
-    try:
-        f = open(filename, "rb+")
-
-        # If file is empty set up the storage
-        # as empty list.
-        if not os.stat(filename).st_size:
-            storage = []
-        else:
-            storage = pickle.load(f)
-            f.close()
-
-    except FileNotFoundError:
-        storage = []
-
-    yield storage
-
-    # Persist the storage.
-    pickle.dump(storage, open(filename, "wb"))
-
-    # Close file if previously opened.
-    if f:
-        f.close()
 
 
 def clear():
@@ -79,7 +16,8 @@ def clear():
     """
 
     with get_storage() as s:
-        s.clear()
+        s["tasks"].clear()
+        s["groups"].clear()
 
     print("\nYour list has been cleared out.\n")
 
@@ -94,9 +32,10 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(prog=__package_name__, description=__description__)
 
+    # 1. Task
     # -a, --add
     h = (
-        "Add task like: -a \"do the right thing\" or -a \"make yo bed\" 1d or -a \"make yo sis bed\" @20/1/2050. "
+        "Creates a task like: -a \"do the right thing\" or -a \"make yo bed\" 1d or -a \"make yo sis bed\" @20/1/2050. "
         "For recurring tasks you can use \"d\", \"w\", \"m\", \"y\" for days, weeks, months, years."
     )
     parser.add_argument("-a", "--add", nargs="+", action="append", help=h)
@@ -109,66 +48,37 @@ def parse_arguments():
     h = "Clears todo list - removes all the tasks. No undo."
     parser.add_argument("-c", "--clear", action="store_true", help=h)
 
+    # 2. Group
+    # -A, --add-group
+    h = "Creates a group which can be used for managing tasks."
+    parser.add_argument("-A", "--add-group", nargs=1, action="append", help=h)
+
+    # -D, --delete-group
+    h = "Removes a group and tasks attached to the group."
+    parser.add_argument("-D", "--delete-group", nargs=1, action="append", help=h)
+
+    # -S, --soft-delete-group
+    h = "Removes a group and tasks attached to the group are pulled out."
+    parser.add_argument("-S", "--soft-delete-group", nargs=1, action="append", help=h)
+
     # --version
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")  # NOQA
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
     return parser.parse_args()
 
 
-def add_task(tasks):
-    """
-    Adds task to the list.
-
-    Frequency might be "@dd/mm/yyyy" or just:
-
-    * Xd - i.e.: 1d (every day)
-    * Xw - i.e.: 1w (every week)
-    * Xm - i.e.: 1m (every month)
-    * Xy - i.e.: 1y (every year)
-
-    :param str title: Title of the task.
-    :param str frequency: Frequency string.
-    """
-
-    def parse_frequency(f):
-
-        if f.startswith("@"):
-            return datetime.strptime(f[1:], "%d/%m/%Y")
-
-        return f
-
-    # Append new task to the todo list.
-    with get_storage() as s:
-        for t in tasks:
-            # If a frequency was given "t" variable has 2 items.
-            s.append(Task(t[0], parse_frequency(t[1]) if 2 == len(t) else None, datetime.now()))
-
-
-def delete_task(index_list):
-    """
-    Deletes a task from storage by index.
-
-    :param int index: Index of task to be deleted.
-    """
-
-    # Sort the IDs descending so while we pop item by item
-    # the task indexes remains the same.
-    to_delete = sorted([i[0] for i in index_list], reverse=True)
-
-    with get_storage() as s:
-
-        for i in to_delete:
-            try:
-                s.pop(int(i) - 1)
-            except IndexError:
-                print(f"Cannot delete {i}")
-
-
 def get_printable_freq(freq):
+    """
+    Formats task frequency.
+
+    :param datetime or str frequency: Frequency to be formatted.
+    :return: Formatted frequency string.
+    :rtype: str
+    """
 
     # Display the frequency properly.
     if isinstance(freq, datetime):
-        return freq.strftime("%d/%m/%Y")
+        return freq.strftime("%m/%d/%Y")
     else:
         return freq
 
@@ -217,6 +127,26 @@ def print_list():
         if "y" == period and 0 == delta % (number * 365):
             return True
 
+    def print_task(number, task, freq=False):
+        """
+        Prints formatted task.
+
+        :param int number: Order number of the task.
+        :param Task task: Task object.
+        :param str freq: Formatted task frequency.
+        """
+
+        group = ""
+
+        # Format task group.
+        if task.group:
+            group = f" [{task.group}]"
+
+        if freq:
+            print(f"\t{number + 1}. {task.title} ({freq}){group}")
+        else:
+            print(f"\t{number + 1}. {task.title}{group}")
+
     def print_today_tasks(tasks):
         """
         Prints today tasks in numbered list.
@@ -231,7 +161,8 @@ def print_list():
 
             freq = get_printable_freq(t.frequency)
 
-            print(f"\t{i + 1}. {t.title} ({freq})")  # NOQA
+            # print(f"\t{i + 1}. {t.title} ({freq})")
+            print_task(i, t, freq)
 
         # print("")
 
@@ -249,9 +180,11 @@ def print_list():
 
             if t.frequency:
                 freq = get_printable_freq(t.frequency)
-                print(f"\t{i + 1}. {t.title} ({freq})")
+                # print(f"\t{i + 1}. {t.title} ({freq})")
+                print_task(i, t, freq)
             else:
-                print(f"\t{i + 1}. {t.title}")
+                # print(f"\t{i + 1}. {t.title}")
+                print_task(i, t)
 
         print("")
 
@@ -260,7 +193,7 @@ def print_list():
         today_tasks = {}
         other_tasks = {}
 
-        for i, t in enumerate(s):
+        for i, t in enumerate(s["tasks"]):
 
             if is_today_task(t):
                 today_tasks[i] = t
@@ -275,26 +208,51 @@ def print_list():
 
 
 def eagle():
+    """
+    Main app function. Spins up the wheel
+    and delivers the output.
+    """
+
+    to_print = False
 
     if 1 < len(sys.argv):
 
         args = parse_arguments()
+        # print(args)
 
-        # Add.
+        # Add task.
         if args.add:
             add_task(args.add)
-            print_list()
+            to_print = True
 
-        # Delete.
+        # Delete task.
         if args.delete:
             delete_task(args.delete)
-            print_list()
+            to_print = True
 
-        # Clear.
+        # Clear tasks.
         if args.clear:
             clear()
 
+        # Add group.
+        if args.add_group:
+            add_group(args.add_group)
+            to_print = True
+
+        # Delete group.
+        if args.delete_group:
+            delete_group(args.delete_group)
+            to_print = True
+
+        # Soft delete group.
+        if args.soft_delete_group:
+            soft_delete_group(args.soft_delete_group)
+            to_print = True
+
     else:
+        to_print = True
+
+    if to_print:
         print_list()
 
 
