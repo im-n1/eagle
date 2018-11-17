@@ -33,7 +33,7 @@ So:
 
 ::
 
-   pip install eagle-todo
+   pip install eagle-cli
 
 You might need to use ``pip3`` instead if you run Python 2 next to Python 3.
 
