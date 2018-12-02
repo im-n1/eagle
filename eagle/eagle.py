@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from . import __package_name__, __version__, __description__
+from . import __package_name__, __description__, __author__, \
+    __homepage__, __version__
 from .tasks import add_task, delete_task
 from .groups import add_group, delete_group, soft_delete_group
 from .storage import get_storage
@@ -61,8 +62,15 @@ def parse_arguments():
     h = "Removes a group and tasks attached to the group are pulled out."
     parser.add_argument("-S", "--soft-delete-group", nargs=1, action="append", help=h)
 
+    # 3. List
+    # -g, --group
+    h = "Filters tasks by group."
+    parser.add_argument("-g", "--group", nargs=1, action="append", help=h)
+
     # --version
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    # parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    h = "Shows version and other useful informations."
+    parser.add_argument("--version", action="store_true", help=h)
 
     return parser.parse_args()
 
@@ -83,10 +91,14 @@ def get_printable_freq(freq):
         return freq
 
 
-def print_list():
+def print_list(groups=None):
     """
     Prints today and other tasks.
     """
+
+    if groups:
+        # Flatten group list.
+        groups = [g for g_list in groups for g in g_list]
 
     def is_today_task(task):
         """
@@ -193,7 +205,12 @@ def print_list():
         today_tasks = {}
         other_tasks = {}
 
+        # Gather tasks.
         for i, t in enumerate(s["tasks"]):
+
+            # Filter by group (if given).
+            if groups and t.group not in groups:
+                continue
 
             if is_today_task(t):
                 today_tasks[i] = t
@@ -214,6 +231,7 @@ def eagle():
     """
 
     to_print = False
+    groups = None
 
     if 1 < len(sys.argv):
 
@@ -249,11 +267,24 @@ def eagle():
             soft_delete_group(args.soft_delete_group)
             to_print = True
 
+        # Filter by group.
+        if args.group:
+            to_print = True
+            groups = args.group
+
+        # Version.
+        if args.version:
+            print((
+                f"{__package_name__} {__version__}\n"
+                f"Author: {__author__}\n"
+                f"Homepage: {__homepage__}"
+            ))
+
     else:
         to_print = True
 
     if to_print:
-        print_list()
+        print_list(groups=groups)
 
 
 if "__main__" == __name__:

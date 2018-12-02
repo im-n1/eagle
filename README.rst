@@ -155,6 +155,27 @@ Example:
         2. do the homework
         3. set up project
 
+**-g, --groups**
+
+Example:
+
+::
+
+   ~ eagle
+
+   Your list:
+
+        1. do the laundry (every week)
+        2. do the homework [School]
+        3. set up project [School]
+
+    ~ eagle -g "School"
+
+    Your list:
+
+        2. do the homework [School]
+        3. set up project [School]
+
 Why CLI?
 --------
 CLI is the best UI ever invented. It's fast, clean, bloat free and you dont have to
