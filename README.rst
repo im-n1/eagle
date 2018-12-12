@@ -196,6 +196,25 @@ There is a few project around which are pretty good. For example `TaskWarrior <h
 which is robust and covers pretty much everything. For me it's too heavy and fancy with all
 the charts and tables. I want something more quiet and more straightforward.
 
+Why you don't use mypy?
+-----------------------
+From mypy FAQ:
+
+::
+
+   Will static typing make my programs run faster?
+
+   Mypy only does static type checking and it does not improve
+   performance. It has a minimal performance impact. In the
+   future, there could be other tools that can compile statically
+   typed mypy code to C modules or to efficient JVM bytecode, for
+   example, but this is outside the scope of the mypy project.
+
+So static typing is just for a developer not for a machine. Once it will also help
+a machine to run Python code faster (Cython principle) I will definitely start using
+that.
+
+
 Can I contribute?
 -----------------
 Absolutely! I would be more than happy to accept any bug-report, improvement, pull request,
