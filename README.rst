@@ -47,6 +47,8 @@ Tasks
 ~~~~~
 **-a, --add**
 
+Adds a task (can be used multiple times).
+
 Example:
 
 ::
@@ -64,6 +66,8 @@ Example:
     * on a specific date: ``@20/1/2050``
 
 **-d, --del**
+
+Deletes a task (can be used multiple times).
 
 Example:
 
@@ -84,6 +88,8 @@ Example:
 - number of the record to be deleted
 
 **-c, --clear**
+
+Removes all tasks and groups.
 
 Example:
 
@@ -107,6 +113,8 @@ Groups
 ~~~~~~
 **-A, --add-group**
 
+Adds a group (can be used multiple times).
+
 Example:
 
 ::
@@ -114,6 +122,8 @@ Example:
     ~ eagle -A "School"
 
 **-D, --delete-group**
+
+Deletes a group with all attached tasks (can be used multiple times).
 
 Example:
 
@@ -134,6 +144,8 @@ Example:
         1. do the laundry (every week)
 
 **-S, --soft-delete-group**
+
+Deletes a group without deleting attached tasks (can be used multiple times).
 
 Example:
 
@@ -156,6 +168,8 @@ Example:
         3. set up project
 
 **-g, --groups**
+
+Lists tasks filtered by a group name (can be used multiple times).
 
 Example:
 
