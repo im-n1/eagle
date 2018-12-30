@@ -106,8 +106,22 @@ Example:
         2. buy presents (on 24th December)
         3. brush yo teeth (every day)
 
-   ~ eagle -c
-   Todo list has been cleared out.
+    ~ eagle -c
+    Todo list has been cleared out.
+
+
+**-t, --today**
+
+Lists only today's tasks.
+
+Example:
+
+::
+
+    ~ eagle -t
+
+    Today:
+        4. brush yo teeth
 
 Groups
 ~~~~~~

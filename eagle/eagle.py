@@ -67,6 +67,10 @@ def parse_arguments():
     h = "Filters tasks by group."
     parser.add_argument("-g", "--group", nargs=1, action="append", help=h)
 
+    # -t, --today
+    h = "Filters today's tasks."
+    parser.add_argument("-t", "--today", action="store_true", help=h)
+
     # --version
     # parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     h = "Shows version and other useful informations."
@@ -91,53 +95,17 @@ def get_printable_freq(freq):
         return freq
 
 
-def print_list(groups=None):
+def print_list(tasks=None):
     """
     Prints today and other tasks.
+
+    :param list tasks: List of already filtered tasks.
     """
 
-    if groups:
-        # Flatten group list.
-        groups = [g for g_list in groups for g in g_list]
-
-    def is_today_task(task):
-        """
-        Checks if the task is placed on today (in case of dated tasks)
-        or is recurring on this day (in case of recurring tasks).
-        """
-
-        # Check for hypen.
-        if task.frequency is None:
-            return False
-
-        # Check for specific date.
-        if isinstance(task.frequency, datetime):
-            if task.frequency.date() == date.today():
-                return True
-
-            return False
-
-        # Parse frequency.
-        number = int(task.frequency[:-1])
-        period = task.frequency[-1:]
-
-        delta = (date.today() - task.created.date()).days
-
-        # Day.
-        if "d" == period and 0 == delta % number:
-            return True
-
-        # Week.
-        if "w" == period and 0 == delta % (number * 7):
-            return True
-
-        # Month.
-        if "m" == period and 0 == delta % (number * 30):
-            return True
-
-        # Year
-        if "y" == period and 0 == delta % (number * 365):
-            return True
+    # Load tasks.
+    if not tasks:
+        with get_storage() as s:
+            tasks = s["tasks"]
 
     def print_task(number, task, freq=False):
         """
@@ -200,28 +168,61 @@ def print_list(groups=None):
 
         print("")
 
-    with get_storage() as s:
+    today_tasks = {}
+    other_tasks = {}
 
-        today_tasks = {}
-        other_tasks = {}
+    # Gather tasks.
+    for i, t in enumerate(tasks):
 
-        # Gather tasks.
-        for i, t in enumerate(s["tasks"]):
+        if t.is_today_task():
+            today_tasks[i] = t
+        else:
+            other_tasks[i] = t
 
-            # Filter by group (if given).
-            if groups and t.group not in groups:
-                continue
+    if today_tasks:
+        print_today_tasks(today_tasks)
 
-            if is_today_task(t):
-                today_tasks[i] = t
-            else:
-                other_tasks[i] = t
+    if other_tasks:
+        print_other_tasks(other_tasks)
 
-        if today_tasks:
-            print_today_tasks(today_tasks)
 
-        if other_tasks:
-            print_other_tasks(other_tasks)
+def filter_tasks_by_groups(tasks=None):
+    """
+    Filters tasks by the given groups.
+
+    :param list tasks: List of already filtered tasks.
+    :return: Narrowed list of tasks.
+    :rtype: list
+    """
+
+    # Load tasks.
+    if not tasks:
+        with get_storage() as s:
+            tasks = s["tasks"]
+
+    # Flatten group list.
+    if groups:
+        groups = [g for g_list in groups for g in g_list]
+        tasks = list(filter(lambda t: t.group in groups, tasks))
+
+    return tasks
+
+
+def filter_today_tasks(tasks=None):
+    """
+    Filters today's tasks.
+
+    :param list tasks: List of already filtered tasks.
+    :return: Narrowed list of tasks.
+    :rtype: list
+    """
+
+    # Load tasks.
+    if not tasks:
+        with get_storage() as s:
+            tasks = s["tasks"]
+
+    return list(filter(lambda t: t.is_today_task(), tasks))
 
 
 def eagle():
@@ -232,6 +233,7 @@ def eagle():
 
     to_print = False
     groups = None
+    tasks = None
 
     if 1 < len(sys.argv):
 
@@ -270,7 +272,12 @@ def eagle():
         # Filter by group.
         if args.group:
             to_print = True
-            groups = args.group
+            tasks = filter_tasks_by_groups(tasks, args.group)
+
+        # Filter today's tasks.
+        if args.today:
+            to_print = True
+            tasks = filter_today_tasks(tasks)
 
         # Version.
         if args.version:
@@ -284,7 +291,7 @@ def eagle():
         to_print = True
 
     if to_print:
-        print_list(groups=groups)
+        print_list(tasks)
 
 
 if "__main__" == __name__:

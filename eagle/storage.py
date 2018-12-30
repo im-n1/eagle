@@ -3,11 +3,54 @@ from contextlib import contextmanager
 from collections import namedtuple
 import os
 # import pprint
+from datetime import datetime, date
 
 
 # Main structures.
 Task = namedtuple("Task", "title frequency group created")
 Group = namedtuple("Group", "title created")
+
+
+def is_today_task(self):
+    """
+    Checks if the task is placed on today (in case of dated tasks)
+    or is recurring on this day (in case of recurring tasks).
+    """
+
+    # Check for hypen.
+    if self.frequency is None:
+        return False
+
+    # Check for specific date.
+    if isinstance(self.frequency, datetime):
+        if self.frequency.date() == date.today():
+            return True
+
+        return False
+
+    # Parse frequency.
+    number = int(self.frequency[:-1])
+    period = self.frequency[-1:]
+
+    delta = (date.today() - self.created.date()).days
+
+    # Day.
+    if "d" == period and 0 == delta % number:
+        return True
+
+    # Week.
+    if "w" == period and 0 == delta % (number * 7):
+        return True
+
+    # Month.
+    if "m" == period and 0 == delta % (number * 30):
+        return True
+
+    # Year
+    if "y" == period and 0 == delta % (number * 365):
+        return True
+
+Task.is_today_task = is_today_task
 
 
 def get_conf_file(file):
