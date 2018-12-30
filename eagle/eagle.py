@@ -71,6 +71,10 @@ def parse_arguments():
     h = "Filters today's tasks."
     parser.add_argument("-t", "--today", action="store_true", help=h)
 
+    # -o, --others
+    h = "Filters others tasks."
+    parser.add_argument("-o", "--others", action="store_true", help=h)
+
     # --version
     # parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     h = "Shows version and other useful informations."
@@ -103,7 +107,7 @@ def print_list(tasks=None):
     """
 
     # Load tasks.
-    if not tasks:
+    if tasks is None:
         with get_storage() as s:
             tasks = s["tasks"]
 
@@ -196,7 +200,7 @@ def filter_tasks_by_groups(tasks=None):
     """
 
     # Load tasks.
-    if not tasks:
+    if tasks is None:
         with get_storage() as s:
             tasks = s["tasks"]
 
@@ -218,11 +222,28 @@ def filter_today_tasks(tasks=None):
     """
 
     # Load tasks.
-    if not tasks:
+    if tasks is None:
         with get_storage() as s:
             tasks = s["tasks"]
 
     return list(filter(lambda t: t.is_today_task(), tasks))
+
+
+def filter_other_tasks(tasks=None):
+    """
+    Filters other tasks.
+
+    :param list tasks: List of already filtered tasks.
+    :return: Narrowed list of tasks.
+    :rtype: list
+    """
+
+    # Load tasks.
+    if not tasks:
+        with get_storage() as s:
+            tasks = s["tasks"]
+
+    return list(filter(lambda t: not t.is_today_task(), tasks))
 
 
 def eagle():
@@ -278,6 +299,11 @@ def eagle():
         if args.today:
             to_print = True
             tasks = filter_today_tasks(tasks)
+
+        # Filter other tasks.
+        if args.others:
+            to_print = True
+            tasks = filter_other_tasks(tasks)
 
         # Version.
         if args.version:
