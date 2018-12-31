@@ -1,12 +1,16 @@
 from .storage import get_storage, Task
 from .groups import group_exist, add_group
 
-from datetime import datetime
+from datetime import datetime, date
 
 
 def add_task(tasks):
     """
     Creates new task.
+
+    1. place takes the task name.
+    2. place takes date/frequency [optional].
+    3. place takes group [optional].
 
     Frequency might be "@dd/mm/yyyy" or just:
 
@@ -22,6 +26,10 @@ def add_task(tasks):
 
         if f.startswith("@"):
             return datetime.strptime(f[1:], "%d/%m/%Y")
+
+        # Try to parse magic date name.
+        if "today" == f:
+            return datetime.now()
 
         return f
 

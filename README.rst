@@ -49,10 +49,16 @@ Tasks
 
 Adds a task (can be used multiple times).
 
+ 1. place takes the task name.
+ 2. place takes date/frequency [optional].
+ 3. place takes group [optional].
+
 Example:
 
 ::
 
+    ~ eagle -a "make yo bed"  # Adds a todo
+    ~ eagle -a "make yo bed" today  # Adds a todo task for today
     ~ eagle -a "make yo bed" 1day  # Adds todo for each day
     ~ eagle -a "make yo sis bed" @20/1/2050  # Adds todo on 20th January 2050
     ~ eagle -a "make yo dog bed" # Adds todo without specific deadline or recurring
@@ -61,9 +67,12 @@ Example:
 
 * subject ``whatever``
 * frequency (optional)
-    * no frequency/recurring: ``-``
-    * recurring: ``1d``, ``1w``, ``1m``, ``1y``
-    * on a specific date: ``@20/1/2050``
+   * no frequency/recurring: ``-``
+   * recurring: ``1d``, ``1w``, ``1m``, ``1y``
+   * on a specific date: ``@20/1/2050``
+   * magical string representing a date
+      * ``today``
+* group (optional) - if the group doesn't exist eagle creates it for you
 
 **-d, --del**
 
