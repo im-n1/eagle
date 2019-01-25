@@ -190,11 +190,12 @@ def print_list(tasks=None):
         print_other_tasks(other_tasks)
 
 
-def filter_tasks_by_groups(tasks=None):
+def filter_tasks_by_groups(tasks=None, groups=None):
     """
     Filters tasks by the given groups.
 
     :param list tasks: List of already filtered tasks.
+    :param list groups: List of existing groups.
     :return: Narrowed list of tasks.
     :rtype: list
     """
