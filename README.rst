@@ -53,7 +53,7 @@ Adds a task (can be used multiple times).
  2. place takes date/frequency [optional].
  3. place takes group [optional].
 
-Example:
+Examples:
 
 ::
 
@@ -65,9 +65,16 @@ Example:
     ~ eagle -a "make yo dog bed ... someday" @20/1/2050 dog # Adds todo on 20th January 2050 to the "dog" group
     ~ eagle -a "make yo dog bed groupped" - dog # Adds todo to the "dog" group - notice the "-" as a date.
 
+However if you wanna add a task with no date/frequency to a certain group
+use ``-`` as date/frequecy.
+
+::
+
+   eagle -a Task1 - group1
+
 * subject ``whatever``
 * frequency (optional)
-   * no frequency/recurring: ``-``
+   * no date/frequency/recurring: ``-``
    * recurring: ``1d``, ``1w``, ``1m``, ``1y``
    * on a specific date: ``@20/1/2050``
    * magical string representing a date
