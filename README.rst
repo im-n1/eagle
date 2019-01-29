@@ -25,7 +25,7 @@ How does it work?
 
 How can I install it?
 ---------------------
-Don't worry about the early version number 0.x. I tend to Semantic Verioning more
+Don't worry about the early version number 0.x. I tend to Semantic Versioning more
 than to "Marketing Versioning". That means version 0.5 is quite solid piece of
 software instead or having version 25 and still not-even-half-way there.
 
@@ -41,8 +41,8 @@ Requirements
 ------------
 * Python 3.6+
 
-Parameters
-----------
+Parameters (how to use it)
+--------------------------
 Tasks
 ~~~~~
 **-a, --add**
@@ -65,13 +65,6 @@ Examples:
     ~ eagle -a "make yo dog bed ... someday" @20/1/2050 dog # Adds todo on 20th January 2050 to the "dog" group
     ~ eagle -a "make yo dog bed groupped" - dog # Adds todo to the "dog" group - notice the "-" as a date.
 
-However if you wanna add a task with no date/frequency to a certain group
-use ``-`` as date/frequecy.
-
-::
-
-   eagle -a Task1 - group1
-
 * subject ``whatever``
 * frequency (optional)
    * no date/frequency/recurring: ``-``
@@ -79,7 +72,16 @@ use ``-`` as date/frequecy.
    * on a specific date: ``@20/1/2050``
    * magical string representing a date
       * ``today``
+      * ``tomorrow``
+      * ``+X`` where ``X`` is number of days. For example ``+5`` means "in 5 days".
 * group (optional) - if the group doesn't exist eagle creates it for you
+
+If you wanna add a task with no date/frequency to a certain group
+use ``-`` as date/frequency.
+
+::
+
+   eagle -a Task1 - group1
 
 **-d, --del**
 

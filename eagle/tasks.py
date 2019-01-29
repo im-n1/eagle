@@ -1,7 +1,7 @@
 from .storage import get_storage, Task
 from .groups import group_exist, add_group
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 def add_task(tasks):
@@ -30,6 +30,19 @@ def add_task(tasks):
         # Try to parse magic date name.
         if "today" == f:
             return datetime.now()
+
+        if "tomorrow" == f:
+            return datetime.now() + timedelta(days=1)
+
+        # Handles the "+X" days - like "+5".
+        # If cannot parse days number fallbacks to "today".
+        if f.startswith("+"):
+            try:
+                days = int(f[1:])
+            except:
+                days = 0
+
+            return datetime.now() + timedelta(days=days)
 
         return f
 
