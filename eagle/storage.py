@@ -28,7 +28,7 @@ def is_today_task(self):
 
         return False
 
-    # Parse frequency.
+    # Parse frequency - for example "1d".
     number = int(self.frequency[:-1])
     period = self.frequency[-1:]
 
