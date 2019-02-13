@@ -94,7 +94,7 @@ def get_printable_freq(freq):
 
     # Display the frequency properly.
     if isinstance(freq, datetime):
-        return freq.strftime("%m/%d/%Y")
+        return freq.strftime("%d/%m/%Y")
     else:
         return freq
 

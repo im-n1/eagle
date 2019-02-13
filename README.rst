@@ -62,6 +62,7 @@ Examples:
     ~ eagle -a "make yo bed" tomorrow  # Adds a todo task for tomorrow
     ~ eagle -a "make yo bed" 1d  # Adds todo for each day
     ~ eagle -a "make yo sis bed" @20/1/2050  # Adds todo on 20th January 2050
+    ~ eagle -a "make yo sis bed" @20/1  # Adds todo on 20th January this year
     ~ eagle -a "make yo sis bed" +5  # Adds todo on 5th day from today
     ~ eagle -a "make yo dog bed" # Adds todo without specific deadline or recurring
     ~ eagle -a "make yo dog bed ... someday" @20/1/2050 dog # Adds todo on 20th January 2050 to the "dog" group
@@ -71,7 +72,7 @@ Examples:
 * frequency (optional)
    * no date/frequency/recurring: ``-``
    * recurring: ``1d``, ``1w``, ``1m``, ``1y``
-   * on a specific date: ``@20/1/2050``
+   * on a specific date: ``@20/1/2050`` or just ``@20/1`` for current year
    * magical string representing a date
       * ``today``
       * ``tomorrow``
@@ -123,7 +124,7 @@ Example:
     Your list:
 
         1. do the laundry (every week)
-        2. buy presents (on 24th December)
+        2. buy presents (24/12/2019)
         3. brush yo teeth (every day)
 
     ~ eagle -c

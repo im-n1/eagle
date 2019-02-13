@@ -9,15 +9,24 @@ def add_task(tasks):
     Creates new task.
 
     1. place takes the task name.
-    2. place takes date/frequency [optional].
+    2. place takes date/frequency [optional] - or "-".
     3. place takes group [optional].
 
-    Frequency might be "@dd/mm/yyyy" or just:
+    Frequency might be "@dd/mm/yyyy" or "@dd/mm" or just:
 
     * Xd - i.e.: 1d (every day)
     * Xw - i.e.: 1w (every week)
     * Xm - i.e.: 1m (every month)
     * Xy - i.e.: 1y (every year)
+
+    or
+
+    +X - X is number of days in future
+
+    or magic names:
+
+    * today
+    * tomorrow
 
     :param list groups: List of lists of task params(task, frequency, group).
     """
@@ -25,7 +34,15 @@ def add_task(tasks):
     def parse_frequency(f):
 
         if f.startswith("@"):
-            return datetime.strptime(f[1:], "%d/%m/%Y")
+
+            # Try (D)D/(M)M/YYYY
+            # or fallback to (D)D/(M)M where year will be the current one.
+            try:
+                return datetime.strptime(f[1:], "%d/%m/%Y")
+            except ValueError:
+                date = datetime.strptime(f[1:], "%d/%m")
+
+                return date.replace(year=date.today().year)
 
         # Try to parse magic date name.
         if "today" == f:
