@@ -39,11 +39,13 @@ def parse_arguments():
         "Creates a task like: -a \"do the right thing\" or -a \"make yo bed\" 1d or -a \"make yo sis bed\" @20/1/2050. "
         "For recurring tasks you can use \"d\", \"w\", \"m\", \"y\" for days, weeks, months, years."
     )
-    parser.add_argument("-a", "--add", nargs="+", action="append", help=h)
+    meta = ("TASK", "FREQUENCY (and GROUP)")
+    parser.add_argument("-a", "--add", nargs="+", action="append", metavar=meta, help=h)
 
     # -d, --delete
     h = "Removes an item from todo list. Cannot be undone."
-    parser.add_argument("-d", "--delete", nargs=1, type=int, action="append", help=h)
+    meta = "TASK"
+    parser.add_argument("-d", "--delete", nargs=1, type=int, action="append", metavar=meta, help=h)
 
     # -c, --clear
     h = "Clears todo list - removes all the tasks. No undo."
@@ -52,15 +54,18 @@ def parse_arguments():
     # 2. Group
     # -A, --add-group
     h = "Creates a group which can be used for managing tasks."
-    parser.add_argument("-A", "--add-group", nargs=1, action="append", help=h)
+    meta = "GROUP"
+    parser.add_argument("-A", "--add-group", nargs=1, action="append", metavar=meta, help=h)
 
     # -D, --delete-group
     h = "Removes a group and tasks attached to the group."
-    parser.add_argument("-D", "--delete-group", nargs=1, action="append", help=h)
+    meta = "GROUP"
+    parser.add_argument("-D", "--delete-group", nargs=1, action="append", metavar=meta, help=h)
 
     # -S, --soft-delete-group
     h = "Removes a group and tasks attached to the group are pulled out."
-    parser.add_argument("-S", "--soft-delete-group", nargs=1, action="append", help=h)
+    meta = "GROUP"
+    parser.add_argument("-S", "--soft-delete-group", nargs=1, action="append", metavar=meta, help=h)
 
     # 3. List
     # -g, --group
@@ -75,6 +80,10 @@ def parse_arguments():
     h = "Filters others tasks."
     parser.add_argument("-o", "--others", action="store_true", help=h)
 
+    # --sort
+    h = "Sort tasks by the given flag. Possible options are: \"groups\"."
+    parser.add_argument("--sort", choices=["groups"], help=h)
+
     # --version
     # parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     h = "Shows version and other useful informations."
@@ -83,33 +92,28 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def get_printable_freq(freq):
-    """
-    Formats task frequency.
-
-    :param datetime or str frequency: Frequency to be formatted.
-    :return: Formatted frequency string.
-    :rtype: str
-    """
-
-    # Display the frequency properly.
-    if isinstance(freq, datetime):
-        return freq.strftime("%d/%m/%Y")
-    else:
-        return freq
-
-
-def print_list(tasks=None):
+def print_list(tasks=None, sort_by=None):
     """
     Prints today and other tasks.
 
     :param list tasks: List of already filtered tasks.
+    :param str sort_by: Sort the task by given flag - choices: "groups"
     """
 
-    # Load tasks.
-    if tasks is None:
-        with get_storage() as s:
-            tasks = s["tasks"]
+    def get_printable_freq(freq):
+        """
+        Formats task frequency.
+
+        :param datetime or str frequency: Frequency to be formatted.
+        :return: Formatted frequency string.
+        :rtype: str
+        """
+
+        # Display the frequency properly.
+        if isinstance(freq, datetime):
+            return freq.strftime("%d/%m/%Y")
+        else:
+            return freq
 
     def print_task(number, task, freq=False):
         """
@@ -141,14 +145,10 @@ def print_list(tasks=None):
 
         print("\nToday:")
 
-        for i, t in tasks.items():
+        for i, t in tasks:
 
             freq = get_printable_freq(t.frequency)
-
-            # print(f"\t{i + 1}. {t.title} ({freq})")
             print_task(i, t, freq)
-
-        # print("")
 
     def print_other_tasks(tasks):
         """
@@ -160,7 +160,7 @@ def print_list(tasks=None):
 
         print("\nYour list:")
 
-        for i, t in tasks.items():
+        for i, t in tasks:
 
             if t.frequency:
                 freq = get_printable_freq(t.frequency)
@@ -172,16 +172,42 @@ def print_list(tasks=None):
 
         print("")
 
-    today_tasks = {}
-    other_tasks = {}
+    def sort_tasks(tasks, flag):
+        """
+        Sorts tasks by the given flag.
+        Choices are:
+            * groups
+
+        :param list tasks: List of tasks.
+        :param str sort_by: The sort flag.
+        """
+
+        if "groups" == flag:
+            return sorted(tasks, key=lambda t: t[1].group if t[1].group else "")
+
+    # Load tasks.
+    if tasks is None:
+        with get_storage() as s:
+            tasks = s["tasks"]
+
+    today_tasks = []
+    other_tasks = []
+    tasks = zip(range(0, len(tasks)), tasks)
 
     # Gather tasks.
-    for i, t in enumerate(tasks):
+    for i, t in tasks:
 
         if t.is_today_task():
-            today_tasks[i] = t
+            today_tasks.append((i, t))
         else:
-            other_tasks[i] = t
+            other_tasks.append((i, t))
+
+    # Sort tasks.
+    if sort_by:
+        if today_tasks:
+            today_tasks = sort_tasks(today_tasks, sort_by)
+        if other_tasks:
+            other_tasks = sort_tasks(other_tasks, sort_by)
 
     if today_tasks:
         print_today_tasks(today_tasks)
@@ -256,11 +282,12 @@ def eagle():
     to_print = False
     groups = None
     tasks = None
+    args = None
 
     if 1 < len(sys.argv):
 
         args = parse_arguments()
-        # print(args)
+        print(args)
 
         # Add task.
         if args.add:
@@ -306,6 +333,10 @@ def eagle():
             to_print = True
             tasks = filter_other_tasks(tasks)
 
+        # Sort.
+        if args.sort:
+            to_print = True
+
         # Version.
         if args.version:
             print((
@@ -318,7 +349,7 @@ def eagle():
         to_print = True
 
     if to_print:
-        print_list(tasks)
+        print_list(tasks, args.sort if args else None)
 
 
 if "__main__" == __name__:
