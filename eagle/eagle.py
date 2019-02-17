@@ -287,7 +287,7 @@ def eagle():
     if 1 < len(sys.argv):
 
         args = parse_arguments()
-        print(args)
+        # print(args)
 
         # Add task.
         if args.add:
