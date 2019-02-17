@@ -225,6 +225,16 @@ Example:
         2. do the homework [School]
         3. set up project [School]
 
+Print options
+~~~~~~~~~~~~~
+**--sort=[groups]**
+
+Tasks are sorted by date and time they were created. You can override this
+option in this parameter.
+
+* ``groups`` - sorts alphabetically tasks by groups. First goes the tasks
+  without any group.
+
 Why CLI?
 --------
 CLI is the best UI ever invented. It's fast, clean, bloat free and you dont have to
