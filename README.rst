@@ -64,7 +64,6 @@ Examples:
     ~ eagle -a "make yo sis bed" @20/1/2050  # Adds todo on 20th January 2050
     ~ eagle -a "make yo sis bed" @20/1  # Adds todo on 20th January this year
     ~ eagle -a "make yo sis bed" +5  # Adds todo on 5th day from today
-    ~ eagle -a "make yo dog bed" # Adds todo without specific deadline or recurring
     ~ eagle -a "make yo dog bed ... someday" @20/1/2050 dog # Adds todo on 20th January 2050 to the "dog" group
     ~ eagle -a "make yo dog bed groupped" - dog # Adds todo to the "dog" group - notice the "-" as a date.
 

@@ -1,5 +1,6 @@
 from .storage import get_storage, Task
 from .groups import group_exist, add_group
+from .tools import err_print
 
 from datetime import datetime, date, timedelta
 
@@ -33,6 +34,7 @@ def add_task(tasks):
 
     def parse_frequency(f):
 
+        # 1. specific date.
         if f.startswith("@"):
 
             # Try (D)D/(M)M/YYYY
@@ -40,17 +42,18 @@ def add_task(tasks):
             try:
                 return datetime.strptime(f[1:], "%d/%m/%Y")
             except ValueError:
-                date = datetime.strptime(f[1:], "%d/%m")
+                d = datetime.strptime(f[1:], "%d/%m")
 
-                return date.replace(year=date.today().year)
+                return d.replace(year=date.today().year)
 
-        # Try to parse magic date name.
+        # 2. Magic date name
         if "today" == f:
             return datetime.now()
 
         if "tomorrow" == f:
             return datetime.now() + timedelta(days=1)
 
+        # 3. +XY days
         # Handles the "+X" days - like "+5".
         # If cannot parse days number fallbacks to "today".
         if f.startswith("+"):
@@ -61,7 +64,16 @@ def add_task(tasks):
 
             return datetime.now() + timedelta(days=days)
 
-        return f
+        # 4. X(d|w|m|y) - i.e. "2w".
+        if 2 <= len(f) and f[-1] in ["d", "w", "m", "y"]:
+            return f
+
+        # 5. No date at all - fallback.
+        if "-" == f:
+            return None
+
+        # No frequecy has been recognized.
+        err_print("No known frequency recognized. Task added without frequency.")
 
     # Append new task to the todo list.
     with get_storage() as s:
@@ -74,7 +86,7 @@ def add_task(tasks):
             # If a frequency was given "t" variable has 2 items.
             s["tasks"].append(Task(
                 t[0],
-                parse_frequency(t[1]) if 2 <= len(t) and "-" != t[1] else None,  # Also handles the "-" date as None.
+                parse_frequency(t[1]) if 1 < len(t) else None,
                 t[2] if 3 == len(t) else None,
                 datetime.now()
             ))
