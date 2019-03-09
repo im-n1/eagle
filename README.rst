@@ -85,6 +85,42 @@ use ``-`` as date/frequency.
 
    eagle -a Task1 - group1
 
+
+**-e, --edit**
+
+Edits a task.
+The user gets  prompted for new title, frequency and group.
+In each prompt you have 3 choices:
+
+   * enter a new value
+   * just hit enter which skips editing of the current property
+   * enter a space (hit spacebar) which deletes the current property (cannot be used for title)
+
+Example:
+
+::
+
+    ~ eagle
+
+    Today:
+        1. brush yo teeth
+
+    ~ eagle -e 1
+
+    Here you can edit a task be rewriting current values.
+    If you wanna remove current value (frequency, group) enter one space (hit spacebar) instead.
+
+    Enter task title: Do the homework
+    Enter frequency: today
+    Enter group (empty space to remove group):
+
+    Task was successfully updated.
+
+
+    Today:
+            1. Do the homework (09/03/2019)
+
+
 **-d, --del**
 
 Deletes a task (can be used multiple times).
@@ -105,7 +141,6 @@ Example:
         2. buy presents (on 24th December)
         3. brush yo teeth (every day)
 
-- number of the record to be deleted
 
 **-c, --clear**
 
@@ -129,6 +164,30 @@ Example:
     ~ eagle -c
     Todo list has been cleared out.
 
+
+**--prune**
+
+Prunes all overdue tasks. Overdue task is such task
+which has a date set as frequency.
+
+Example:
+
+::
+
+    ~ eagle
+
+    Your list:
+
+        1. go shopping (1/1/2000)
+        2. buy presents (24/12/2030)
+
+    ~ eagle --prune
+    Task "go shopping 10:30" has been deleted.
+    ~ eagle
+
+    Your list:
+
+        1. buy presents (24/12/2030)
 
 **-t, --today**
 

@@ -2,12 +2,12 @@
 
 from . import __package_name__, __description__, __author__, \
     __homepage__, __version__
-from .tasks import add_task, delete_task
+from .tasks import add_task, delete_task, edit_task, prune
 from .groups import add_group, delete_group, soft_delete_group
 from .storage import get_storage
 
 import argparse
-from datetime import datetime, date
+from datetime import datetime
 import sys
 
 
@@ -49,7 +49,11 @@ def parse_arguments():
 
     # -c, --clear
     h = "Clears todo list - removes all the tasks. No undo."
-    parser.add_argument("-c", "--clear", action="store_true", help=h)
+    parser.add_argument("--clear", action="store_true", help=h)
+
+    # --prune
+    h = "Removes all overdue tasks."
+    parser.add_argument("--prune", action="store_true", help=h)
 
     # 2. Group
     # -A, --add-group
@@ -66,6 +70,11 @@ def parse_arguments():
     h = "Removes a group and tasks attached to the group are pulled out."
     meta = "GROUP"
     parser.add_argument("-S", "--soft-delete-group", nargs=1, action="append", metavar=meta, help=h)
+
+    # -e
+    h = "Edits a task."
+    meta = "TASK"
+    parser.add_argument("-e", "--edit", nargs=1, type=int, metavar=meta, help=h)
 
     # 3. List
     # -g, --group
@@ -280,7 +289,7 @@ def eagle():
     """
 
     to_print = False
-    groups = None
+    # groups = None
     tasks = None
     args = None
 
@@ -294,6 +303,11 @@ def eagle():
             add_task(args.add)
             to_print = True
 
+        # Edit task.
+        if args.edit:
+            edit_task(args.edit)
+            to_print = True
+
         # Delete task.
         if args.delete:
             delete_task(args.delete)
@@ -302,6 +316,9 @@ def eagle():
         # Clear tasks.
         if args.clear:
             clear()
+
+        if args.prune:
+            prune()
 
         # Add group.
         if args.add_group:
