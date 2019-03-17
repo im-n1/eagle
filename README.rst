@@ -189,7 +189,7 @@ Example:
 
         1. buy presents (24/12/2030)
 
-**-t, --today**
+**--today**
 
 Lists only today's tasks.
 
@@ -197,10 +197,38 @@ Example:
 
 ::
 
-    ~ eagle -t
+    ~ eagle --today
 
     Today:
         4. brush yo teeth
+
+        
+**--other**
+
+Lists only "other" tasks - all tasks except today's and overdue tasks.
+
+Example:
+
+::
+
+    ~ eagle --other
+
+    Your list:
+        1. buy presents (24/12/2030)
+
+        
+**--overdue**
+
+Lists only overdue tasks.
+
+Example:
+
+::
+
+    ~ eagle --overdue
+
+    Your list:
+        1. run (1/9/1939)
 
 Groups
 ~~~~~~
