@@ -79,6 +79,7 @@ def add_task(tasks):
 
     # Append new task to the todo list.
     with get_storage() as s:
+
         for t in tasks:
 
             # Check if group was mentioned.

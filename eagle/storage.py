@@ -50,7 +50,20 @@ def is_today_task(self):
     if "y" == period and 0 == delta % (number * 365):
         return True
 
+
 Task.is_today_task = is_today_task
+
+
+def is_overdue(self):
+
+    if self.frequency is None:
+        return False
+
+    if isinstance(self.frequency, datetime) and self.frequency.date() < date.today():
+        return True
+
+
+Task.is_overdue = is_overdue
 
 
 def get_conf_file(file):
