@@ -55,7 +55,7 @@ Adds a task (can be used multiple times).
 
 Examples:
 
-::
+.. code-block:: bash
 
     ~ eagle -a "make yo bed"  # Adds a todo
     ~ eagle -a "make yo bed" today  # Adds a todo task for today
@@ -329,11 +329,6 @@ or modernize each year (see web apps).
 
 Also you can easily parse the output and chain that into your window manager widget if you
 want to (i.e. AwesomeWM).
-
-Why GitLab?
------------
-It's hard to explain. It's one of those "once you switch you don't look back" things.
-Try it yourself.
 
 Isn't this just another copycat?
 --------------------------------
