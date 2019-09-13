@@ -4,6 +4,9 @@ Eagle
 .. image:: https://gitlab.com/n1_/eagle/raw/master/logo.png
    :align: center
 
+.. image:: https://img.shields.io/pypi/dm/eagle-cli
+   :align: center
+
 Eagle is a simple CLI todo tool. It's so simple it hurts my coding skills.
 
 How does it work?
@@ -202,7 +205,7 @@ Example:
     Today:
         4. brush yo teeth
 
-        
+
 **--other**
 
 Lists only "other" tasks - all tasks except today's and overdue tasks.
@@ -216,7 +219,7 @@ Example:
     Your list:
         1. buy presents (24/12/2030)
 
-        
+
 **--overdue**
 
 Lists only overdue tasks.
