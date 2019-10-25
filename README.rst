@@ -1,7 +1,7 @@
 Eagle
 =====
 
-.. image:: https://gitlab.com/n1_/eagle/raw/master/logo.png
+.. image:: https://raw.githubusercontent.com/im-n1/eagle/master/logo.png
    :align: center
 
 .. image:: https://img.shields.io/pypi/dm/eagle-cli
