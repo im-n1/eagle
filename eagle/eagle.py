@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
-
-from . import __package_name__, __description__, __author__, \
-    __homepage__, __version__
+from .meta import CONFIG
 from .tasks import add_task, delete_task, edit_task, prune
 from .groups import add_group, delete_group, soft_delete_group
 from .storage import get_storage
@@ -31,13 +28,15 @@ def parse_arguments():
     :rtype: Namespace
     """
 
-    parser = argparse.ArgumentParser(prog=__package_name__, description=__description__)
+    parser = argparse.ArgumentParser(
+        prog=CONFIG["package_name"], description=CONFIG["description"]
+    )
 
     # 1. Task
     # -a, --add
     h = (
-        "Creates a task like: -a \"do the right thing\" or -a \"make yo bed\" 1d or -a \"make yo sis bed\" @20/1/2050. "
-        "For recurring tasks you can use \"d\", \"w\", \"m\", \"y\" for days, weeks, months, years."
+        'Creates a task like: -a "do the right thing" or -a "make yo bed" 1d or -a "make yo sis bed" @20/1/2050. '
+        'For recurring tasks you can use "d", "w", "m", "y" for days, weeks, months, years.'
     )
     meta = ("TASK", "FREQUENCY (and GROUP)")
     parser.add_argument("-a", "--add", nargs="+", action="append", metavar=meta, help=h)
@@ -45,7 +44,9 @@ def parse_arguments():
     # -d, --delete
     h = "Removes an item from todo list. Cannot be undone."
     meta = "TASK"
-    parser.add_argument("-d", "--delete", nargs=1, type=int, action="append", metavar=meta, help=h)
+    parser.add_argument(
+        "-d", "--delete", nargs=1, type=int, action="append", metavar=meta, help=h
+    )
 
     # -c, --clear
     h = "Clears todo list - removes all the tasks. No undo."
@@ -59,17 +60,23 @@ def parse_arguments():
     # -A, --add-group
     h = "Creates a group which can be used for managing tasks."
     meta = "GROUP"
-    parser.add_argument("-A", "--add-group", nargs=1, action="append", metavar=meta, help=h)
+    parser.add_argument(
+        "-A", "--add-group", nargs=1, action="append", metavar=meta, help=h
+    )
 
     # -D, --delete-group
     h = "Removes a group and tasks attached to the group."
     meta = "GROUP"
-    parser.add_argument("-D", "--delete-group", nargs=1, action="append", metavar=meta, help=h)
+    parser.add_argument(
+        "-D", "--delete-group", nargs=1, action="append", metavar=meta, help=h
+    )
 
     # -S, --soft-delete-group
     h = "Removes a group and tasks attached to the group are pulled out."
     meta = "GROUP"
-    parser.add_argument("-S", "--soft-delete-group", nargs=1, action="append", metavar=meta, help=h)
+    parser.add_argument(
+        "-S", "--soft-delete-group", nargs=1, action="append", metavar=meta, help=h
+    )
 
     # -e
     h = "Edits a task."
@@ -94,7 +101,7 @@ def parse_arguments():
     parser.add_argument("--overdue", action="store_true", help=h)
 
     # --sort
-    h = "Sort tasks by the given flag. Possible options are: \"groups\"."
+    h = 'Sort tasks by the given flag. Possible options are: "groups".'
     parser.add_argument("--sort", choices=["groups"], help=h)
 
     # --version
@@ -321,7 +328,9 @@ def filter_other_tasks(tasks=None):
         with get_storage() as s:
             tasks = enumerate(s["tasks"])
 
-    return list(filter(lambda t: not t[1].is_today_task() and not t[1].is_overdue(), tasks))
+    return list(
+        filter(lambda t: not t[1].is_today_task() and not t[1].is_overdue(), tasks)
+    )
 
 
 def eagle():
@@ -403,18 +412,16 @@ def eagle():
 
         # Version.
         if args.version:
-            print((
-                f"{__package_name__} {__version__}\n"
-                f"Author: {__author__}\n"
-                f"Homepage: {__homepage__}"
-            ))
+            print(
+                (
+                    f"{CONFIG['package_name']} {CONFIG['version']}\n"
+                    f"Author: {CONFIG['author']}\n"
+                    f"Homepage: {CONFIG['homepage']}"
+                )
+            )
 
     else:
         to_print = True
 
     if to_print:
         print_list(tasks, args.sort if args else None)
-
-
-if "__main__" == __name__:
-    eagle()

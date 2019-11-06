@@ -87,12 +87,14 @@ def add_task(tasks):
                 add_group([[t[2]]])
 
             # If a frequency was given "t" variable has 2 items.
-            s["tasks"].append(Task(
-                t[0],
-                parse_frequency(t[1], silent=False) if 1 < len(t) else None,
-                t[2] if 3 == len(t) else None,
-                datetime.now()
-            ))
+            s["tasks"].append(
+                Task(
+                    t[0],
+                    parse_frequency(t[1], silent=False) if 1 < len(t) else None,
+                    t[2] if 3 == len(t) else None,
+                    datetime.now(),
+                )
+            )
 
 
 def edit_task(task):
@@ -107,7 +109,9 @@ def edit_task(task):
         origin_task = s["tasks"][index]
 
         print("\nHere you can edit a task be rewriting current values.")
-        print("If you wanna remove current value (frequency, group) enter one space (hit spacebar) instead.\n")
+        print(
+            "If you wanna remove current value (frequency, group) enter one space (hit spacebar) instead.\n"
+        )
 
         # Title.
         while True:
@@ -144,12 +148,7 @@ def edit_task(task):
 
         # Save.
         s["tasks"].pop(index)
-        s["tasks"].insert(index, Task(
-            title,
-            freq,
-            group,
-            origin_task.created
-        ))
+        s["tasks"].insert(index, Task(title, freq, group, origin_task.created))
 
         print("\nTask was successfully updated.\n")
 
@@ -197,4 +196,4 @@ def prune():
         # Delete the tasks.
         for i in to_delete:
             task = s["tasks"].pop(i)
-            print(f"Task \"{task.title}\" has been deleted.")
+            print(f'Task "{task.title}" has been deleted.')

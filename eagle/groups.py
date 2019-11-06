@@ -19,7 +19,7 @@ def add_group(groups):
             if not group_exist(g):
                 s["groups"].append(Group(g, datetime.now()))
             else:
-                err_print(f"Group \"{g}\" already exists.")
+                err_print(f'Group "{g}" already exists.')
 
 
 def delete_group(groups):

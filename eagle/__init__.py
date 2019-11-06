@@ -1,5 +1,0 @@
-__package_name__ = "eagle"
-__version__ = "0.3.4"
-__description__ = "Simple TODO tool for CLI."
-__author__ = "n1"
-__homepage__ = "https://gitlab.com/n1_/eagle"
