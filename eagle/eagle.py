@@ -112,7 +112,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def print_list(tasks=None, sort_by=None):
+def print_list(tasks, sort_by=None):
     """
     Prints today and other tasks.
 
@@ -219,7 +219,7 @@ def print_list(tasks=None, sort_by=None):
             return sorted(tasks, key=lambda t: t[1].group if t[1].group else "")
 
     # Load tasks.
-    if tasks is None:
+    if not tasks:
         with get_storage() as s:
             tasks = enumerate(s["tasks"])
 
@@ -268,7 +268,7 @@ def filter_tasks_by_groups(tasks=None, groups=None):
     """
 
     # Load tasks.
-    if tasks is None:
+    if not tasks:
         with get_storage() as s:
             tasks = s["tasks"]
 
@@ -280,53 +280,47 @@ def filter_tasks_by_groups(tasks=None, groups=None):
     return tasks
 
 
-def filter_today_tasks(tasks=None):
+def filter_today_tasks():
     """
     Filters today's tasks.
 
-    :param list tasks: List of already filtered tasks.
     :return: Narrowed list of tasks - enumerated.
     :rtype: list
     """
 
     # Load tasks.
-    if tasks is None:
-        with get_storage() as s:
-            tasks = s["tasks"]
+    with get_storage() as s:
+        tasks = s["tasks"]
 
     return list(filter(lambda t: t[1].is_today_task(), enumerate(tasks)))
 
 
-def filter_overdue_tasks(tasks=None):
+def filter_overdue_tasks():
     """
     Filters overdue tasks.
 
-    :param list tasks: List of already filtered tasks.
     :return: Narrowed list of tasks - enumerated.
     :rtype: list
     """
 
     # Load tasks.
-    if tasks is None:
-        with get_storage() as s:
-            tasks = s["tasks"]
+    with get_storage() as s:
+        tasks = s["tasks"]
 
     return list(filter(lambda t: t[1].is_overdue(), enumerate(tasks)))
 
 
-def filter_other_tasks(tasks=None):
+def filter_other_tasks():
     """
     Filters other tasks.
 
-    :param list tasks: List of already filtered tasks.
     :return: Narrowed list of tasks.
     :rtype: list
     """
 
     # Load tasks.
-    if not tasks:
-        with get_storage() as s:
-            tasks = enumerate(s["tasks"])
+    with get_storage() as s:
+        tasks = enumerate(s["tasks"])
 
     return list(
         filter(lambda t: not t[1].is_today_task() and not t[1].is_overdue(), tasks)
@@ -341,7 +335,7 @@ def eagle():
 
     to_print = False
     # groups = None
-    tasks = None
+    tasks = []
     args = None
 
     if 1 < len(sys.argv):
@@ -389,22 +383,22 @@ def eagle():
         # Filter by group.
         if args.group:
             to_print = True
-            tasks = filter_tasks_by_groups(tasks, args.group)
+            tasks.extend(filter_tasks_by_groups(tasks, args.group))
 
         # Filter today's tasks.
         if args.today:
             to_print = True
-            tasks = filter_today_tasks(tasks)
+            tasks.extend(filter_today_tasks())
 
         # Filter overdue tasks.
         if args.overdue:
             to_print = True
-            tasks = filter_overdue_tasks(tasks)
+            tasks.extend(filter_overdue_tasks())
 
         # Filter other tasks.
         if args.others:
             to_print = True
-            tasks = filter_other_tasks(tasks)
+            tasks.extend(filter_other_tasks())
 
         # Sort.
         if args.sort:
