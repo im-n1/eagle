@@ -205,6 +205,37 @@ Example:
     Today:
         4. brush yo teeth
 
+**--overdue**
+
+Lists only overdue tasks.
+
+Example:
+
+::
+
+    ~ eagle --overdue
+
+    Your list:
+        1. run (1/9/1939)
+
+**--search**
+
+Searches tasks by it's title.
+
+Example:
+
+::
+    ~ eagle
+
+    Your list:
+
+        1. go shopping (1/1/2000)
+        2. buy presents (24/12/2030)
+
+    ~ eagle --search shopping
+
+    Your list:
+        1. go shopping (1/1/2000)
 
 **--other**
 
@@ -219,19 +250,10 @@ Example:
     Your list:
         1. buy presents (24/12/2030)
 
+.. note::
 
-**--overdue**
-
-Lists only overdue tasks.
-
-Example:
-
-::
-
-    ~ eagle --overdue
-
-    Your list:
-        1. run (1/9/1939)
+   Filtering tasks with ``--today``, ``--overdue``, ``--search`` and
+   ``--other`` can be stacked up. For example ``eagle --overdue --today``.
 
 Groups
 ~~~~~~

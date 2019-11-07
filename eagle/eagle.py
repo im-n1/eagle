@@ -92,13 +92,18 @@ def parse_arguments():
     h = "Filters today's tasks."
     parser.add_argument("--today", action="store_true", help=h)
 
-    # --others
-    h = "Filters others tasks."
-    parser.add_argument("--others", action="store_true", help=h)
-
     # --overdue
     h = "Filters overdue tasks."
     parser.add_argument("--overdue", action="store_true", help=h)
+
+    # --search
+    h = "Searches tasks."
+    meta = "QUERY"
+    parser.add_argument("--search", nargs=1, action="append", metavar=meta, help=h)
+
+    # --others
+    h = "Filters others tasks."
+    parser.add_argument("--others", action="store_true", help=h)
 
     # --sort
     h = 'Sort tasks by the given flag. Possible options are: "groups".'
@@ -327,6 +332,30 @@ def filter_other_tasks():
     )
 
 
+def search_tasks(queries):
+    """
+    Search tasks.
+
+    :param str queries: Query string to be searched in tasks.
+    :return: Narrowed list of tasks.
+    :rtype: list
+    """
+
+    filtered_tasks = []
+    queries = [q for q_list in queries for q in q_list]
+
+    # Load tasks.
+    with get_storage() as s:
+        tasks = enumerate(s["tasks"])
+
+    for query in queries:
+        filtered_tasks.extend(
+            list(filter(lambda t: query.lower() in t[1].title.lower(), tasks))
+        )
+
+    return filtered_tasks
+
+
 def eagle():
     """
     Main app function. Spins up the wheel
@@ -394,6 +423,11 @@ def eagle():
         if args.overdue:
             to_print = True
             tasks.extend(filter_overdue_tasks())
+
+        # Search tasks.
+        if args.search:
+            to_print = True
+            tasks.extend(search_tasks(args.search))
 
         # Filter other tasks.
         if args.others:
