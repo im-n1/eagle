@@ -225,6 +225,7 @@ Searches tasks by it's title.
 Example:
 
 ::
+
     ~ eagle
 
     Your list:
