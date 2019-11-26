@@ -1,7 +1,7 @@
-from .storage import get_storage, Group, Task
-from .tools import err_print
-
 from datetime import datetime
+
+from .storage import Group, Task, get_storage
+from .tools import err_print
 
 
 def add_group(groups):

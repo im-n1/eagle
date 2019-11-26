@@ -1,7 +1,7 @@
 CONFIG = {
     "package_name": "eagle",
-    "version": "0.3.4",
+    "version": "0.4",
     "description": "Simple TODO tool for CLI.",
     "author": "n1",
-    "homepage": "https://gitlab.com/n1_/eagle",
+    "homepage": "https://github.com/im-n1/eagle",
 }

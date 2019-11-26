@@ -1,11 +1,10 @@
-import pickle
-from contextlib import contextmanager
-from collections import namedtuple
 import os
+import pickle
+from collections import namedtuple
+from contextlib import contextmanager
 
 # import pprint
-from datetime import datetime, date, timedelta
-
+from datetime import date, datetime, timedelta
 
 # Main structures.
 Task = namedtuple("Task", "title frequency group created")

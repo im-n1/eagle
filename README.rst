@@ -218,6 +218,22 @@ Example:
     Your list:
         1. run (1/9/1939)
 
+**--upcoming**
+
+Filters upcoming tasks (up to 3 days starting from today).
+
+Example:
+
+::
+
+   ~ eagle --upcoming
+
+   Today:
+       2. Buy booze
+
+   Upcoming:
+       5. Gym (1/1/2030)
+
 **--search**
 
 Searches tasks by it's title.

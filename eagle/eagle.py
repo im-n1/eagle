@@ -1,11 +1,11 @@
-from .meta import CONFIG
-from .tasks import add_task, delete_task, edit_task, prune
-from .groups import add_group, delete_group, soft_delete_group
-from .storage import get_storage
-
 import argparse
-from datetime import datetime
 import sys
+from datetime import datetime
+
+from .groups import add_group, delete_group, soft_delete_group
+from .meta import CONFIG
+from .storage import get_storage
+from .tasks import add_task, delete_task, edit_task, prune
 
 
 def clear():

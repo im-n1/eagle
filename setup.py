@@ -10,7 +10,6 @@ with open("README.rst", "r") as f:
 
 setuptools.setup(
     name="eagle-cli",
-    # version="0.1.1",
     version=CONFIG["version"],
     description=CONFIG["description"],
     long_description=long_description,
