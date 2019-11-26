@@ -2,8 +2,9 @@ import pickle
 from contextlib import contextmanager
 from collections import namedtuple
 import os
+
 # import pprint
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 # Main structures.
@@ -11,11 +12,18 @@ Task = namedtuple("Task", "title frequency group created")
 Group = namedtuple("Group", "title created")
 
 
-def is_today_task(self):
+def is_today_task(self, today=None):
     """
     Checks if the task is placed on today (in case of dated tasks)
     or is recurring on this day (in case of recurring tasks).
+
+    Today can be faked with ``today`` parameter to arbitrary date.
+
+    :param date today: Fake today date.
     """
+
+    if not today:
+        today = date.today()
 
     # Check for hypen.
     if self.frequency is None:
@@ -23,7 +31,7 @@ def is_today_task(self):
 
     # Check for specific date.
     if isinstance(self.frequency, datetime):
-        if self.frequency.date() == date.today():
+        if self.frequency.date() == today:
             return True
 
         return False
@@ -32,7 +40,7 @@ def is_today_task(self):
     number = int(self.frequency[:-1])
     period = self.frequency[-1:]
 
-    delta = (date.today() - self.created.date()).days
+    delta = (today - self.created.date()).days
 
     # Day.
     if "d" == period and 0 == delta % number:
@@ -64,6 +72,19 @@ def is_overdue(self):
 
 
 Task.is_overdue = is_overdue
+
+
+def is_upcoming(self):
+
+    for i in range(1, 4):
+
+        is_upcoming_task = self.is_today_task(date.today() + timedelta(days=i))
+
+        if is_upcoming_task:
+            return True
+
+
+Task.is_upcoming = is_upcoming
 
 
 def get_conf_file(file):
@@ -128,10 +149,7 @@ def get_storage():
 
     def get_empty_storage():
 
-        return {
-            "groups": [],
-            "tasks": [],
-        }
+        return {"groups": [], "tasks": []}
 
     if hasattr(get_storage, "storage"):
         yield get_storage.storage

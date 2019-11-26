@@ -88,13 +88,17 @@ def parse_arguments():
     h = "Filters tasks by group."
     parser.add_argument("-g", "--group", nargs=1, action="append", help=h)
 
+    # --overdue
+    h = "Filters overdue tasks."
+    parser.add_argument("--overdue", action="store_true", help=h)
+
     # --today
     h = "Filters today's tasks."
     parser.add_argument("--today", action="store_true", help=h)
 
-    # --overdue
-    h = "Filters overdue tasks."
-    parser.add_argument("--overdue", action="store_true", help=h)
+    # --upcoming
+    h = "Filters upcoming tasks (up to 3 days starting from today)."
+    parser.add_argument("--upcoming", action="store_true", help=h)
 
     # --search
     h = "Searches tasks."
@@ -117,9 +121,9 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def print_list(tasks, sort_by=None):
+def print_list(tasks, sort_by=None, all_tasks=False):
     """
-    Prints today and other tasks.
+    Prints overdue, today upcoming and other tasks.
 
     :param list tasks: List of already filtered tasks - enumerated.
     :param str sort_by: Sort the task by given flag - choices: "groups"
@@ -190,6 +194,21 @@ def print_list(tasks, sort_by=None):
             freq = get_printable_freq(t.frequency)
             print_task(i, t, freq)
 
+    def print_upcoming_tasks(tasks):
+        """
+        Prints upcoming tasks in numbered list.
+        The item number is +1 of index from storage index.
+
+        :param dict tasks: Task dict where key is task index and val Task instance.
+        """
+
+        print("\nUpcoming:")
+
+        for i, t in tasks:
+
+            freq = get_printable_freq(t.frequency)
+            print_task(i, t, freq)
+
     def print_other_tasks(tasks):
         """
         Prints other (besides today) tasks in numbered list.
@@ -224,13 +243,14 @@ def print_list(tasks, sort_by=None):
             return sorted(tasks, key=lambda t: t[1].group if t[1].group else "")
 
     # Load tasks.
-    if not tasks:
+    if all_tasks:
         with get_storage() as s:
             tasks = enumerate(s["tasks"])
 
     overdue_tasks = []
     today_tasks = []
     other_tasks = []
+    upcoming_tasks = []
     # tasks = zip(range(0, len(tasks)), tasks)
 
     # Gather tasks.
@@ -240,6 +260,8 @@ def print_list(tasks, sort_by=None):
             overdue_tasks.append((i, t))
         elif t.is_today_task():
             today_tasks.append((i, t))
+        elif t.is_upcoming():
+            upcoming_tasks.append((i, t))
         else:
             other_tasks.append((i, t))
 
@@ -257,6 +279,9 @@ def print_list(tasks, sort_by=None):
 
     if today_tasks:
         print_today_tasks(today_tasks)
+
+    if upcoming_tasks:
+        print_upcoming_tasks(upcoming_tasks)
 
     if other_tasks:
         print_other_tasks(other_tasks)
@@ -346,14 +371,31 @@ def search_tasks(queries):
 
     # Load tasks.
     with get_storage() as s:
-        tasks = enumerate(s["tasks"])
+        tasks = s["tasks"]
 
     for query in queries:
         filtered_tasks.extend(
-            list(filter(lambda t: query.lower() in t[1].title.lower(), tasks))
+            list(
+                filter(lambda t: query.lower() in t[1].title.lower(), enumerate(tasks))
+            )
         )
 
     return filtered_tasks
+
+
+def filter_upcoming_tasks():
+    """
+    Filters upcoming tasks.
+
+    :return: Narrowed list of tasks.
+    :rtype: list
+    """
+
+    # Load tasks.
+    with get_storage() as s:
+        tasks = s["tasks"]
+
+    return list(filter(lambda t: t[1].is_upcoming(), enumerate(tasks)))
 
 
 def eagle():
@@ -366,6 +408,7 @@ def eagle():
     # groups = None
     tasks = []
     args = None
+    all_tasks = False
 
     if 1 < len(sys.argv):
 
@@ -424,6 +467,11 @@ def eagle():
             to_print = True
             tasks.extend(filter_overdue_tasks())
 
+        # Filter upcoming tasks.
+        if args.upcoming:
+            to_print = True
+            tasks.extend(filter_upcoming_tasks())
+
         # Search tasks.
         if args.search:
             to_print = True
@@ -450,6 +498,7 @@ def eagle():
 
     else:
         to_print = True
+        all_tasks = True
 
     if to_print:
-        print_list(tasks, args.sort if args else None)
+        print_list(tasks, args.sort if args else None, all_tasks)
