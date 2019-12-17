@@ -63,6 +63,7 @@ Examples:
     ~ eagle -a "make yo bed"  # Adds a todo
     ~ eagle -a "make yo bed" today  # Adds a todo task for today
     ~ eagle -a "make yo bed" tomorrow  # Adds a todo task for tomorrow
+    ~ eagle -a "make yo bed" wed  # Adds a todo task for nearest Wednesday
     ~ eagle -a "make yo bed" 1d  # Adds todo for each day
     ~ eagle -a "make yo sis bed" @20/1/2050  # Adds todo on 20th January 2050
     ~ eagle -a "make yo sis bed" @20/1  # Adds todo on 20th January this year
@@ -78,6 +79,7 @@ Examples:
    * magical string representing a date
       * ``today``
       * ``tomorrow``
+      * ``weekday name`` recognisable nearest weekday name (mon, mo, monday, sun, fr, ..)
       * ``+X`` where ``X`` is number of days. For example ``+5`` means "in 5 days".
 * group (optional) - if the group doesn't exist eagle creates it for you
 

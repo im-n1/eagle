@@ -1,3 +1,4 @@
+import calendar
 from datetime import date, datetime, timedelta
 
 from .groups import add_group, group_exist
@@ -25,6 +26,15 @@ def parse_frequency(f, silent=True):
 
     if "tomorrow" == f:
         return datetime.now() + timedelta(days=1)
+
+    # Try to seek nearest weekday.
+    for i in range(1, 7):
+
+        the_date = datetime.now() + timedelta(days=i)
+        day_index = the_date.weekday()
+
+        if calendar.day_name[day_index].lower().startswith(f.lower()):
+            return the_date
 
     # 3. +XY days
     # Handles the "+X" days - like "+5".
